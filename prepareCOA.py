@@ -39,7 +39,7 @@ Do not add additional words. If there are 15 bank accounts given, you must retur
 """
 
 sga_chart_of_accounts = [
-    "Accounts Payable", "Accounts Receivable", "Accrued Expense", "Accrued Revenue",
+    "Accounts Payable", "Accounts Receivable",
     "Business Bank Account", "Cash on Hand", "Cost of Goods Sold", "Creditable Withholding Tax",
     "Deferred Input VAT Receivable", "Deferred Output VAT Payable", "Depreciation Expense",
     "FX Bank Revaluation (Gains)/Loss", "FX Realized Currency (Gains)/Loss",
