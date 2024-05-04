@@ -1,13 +1,42 @@
 import streamlit as st
 import pandas as pd
-from io import BytesIO
 import requests
-import json
-
-API_KEY = ''
 import requests
 import concurrent.futures
 
+API_KEY = ''
+
+prompt = f"""
+You are a skilled accountant. 
+Determine the closest matching account type for each account below. 
+If there is no matching type, name it 'Not an Account type'. 
+
+The possible types are:
+1. Asset - Bank Accounts
+2. Asset - Cash
+3. Asset - Current Asset
+4. Asset - Fixed Asset
+5. Asset - Inventory
+6. Asset - Non-current Asset
+7. Equity - Shareholders Equity
+8. Expense - Direct Costs
+9. Expense - Operating Expense
+10. Expense - Other Expense
+11. Liability - Current Liability
+12. Liability - Non-current Liability
+13. Revenue - Operating Revenue
+14. Revenue - Other Revenue
+
+For each bank account, return only mapped account type.
+An example of the format is within the three backticks:
+```
+Expense - Operating Expense
+Expense - Other Expense
+Expense - Direct Costs
+# Add more if there are more than 3 bank accounts given. 
+```
+Do not add additional words. If there are 15 bank accounts given, you must return exactly 15 mapped account types. 
+"""
 
 def classify_account_types(account_names, batch_size=15):
     headers = {
@@ -21,22 +50,7 @@ def classify_account_types(account_names, batch_size=15):
         batch = account_names[start_index:end_index]
         messages = [{
             'role': 'system',
-            'content': "You are a skilled accountant. Determine the closest matching account type for each account below. "
-                       "If there is no matching type, name it 'Not an Account type'. The possible types are:\n"
-                       "- Asset - Bank Accounts\n"
-                       "- Asset - Cash\n"
-                       "- Asset - Current Asset\n"
-                       "- Asset - Fixed Asset\n"
-                       "- Asset - Inventory\n"
-                       "- Asset - Non-current Asset\n"
-                       "- Equity - Shareholders Equity\n"
-                       "- Expense - Direct Costs\n"
-                       "- Expense - Operating Expense\n"
-                       "- Expense - Other Expense\n"
-                       "- Liability - Current Liability\n"
-                       "- Liability - Non-current Liability\n"
-                       "- Revenue - Operating Revenue\n"
-                       "- Revenue - Other Revenue"
+            'content': prompt
         }]
         for name in batch:
             messages.append({
@@ -56,11 +70,12 @@ def classify_account_types(account_names, batch_size=15):
             response.raise_for_status()
             response_json = response.json()
             content = response_json['choices'][0]['message']['content']
-            batch_results = [line.split('Type: ')[1].strip() if 'Type:' in line else "Error in classification" for line in content.split('\n')]
+            content = content.strip("```").strip()
+            batch_results = [line.strip() for line in content.split('\n')]
 
             if len(batch_results) != len(batch):
-                print(batch)
-                print(batch_results)
+                print("batch: ", batch)
+                print("batch results: ", batch_results)
                 raise ValueError(f"Expected {len(batch)} results, but got {len(batch_results)}")
         except (requests.exceptions.RequestException, ValueError, IndexError) as e:
             print(f"Error processing batch: {e}")
