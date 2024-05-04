@@ -4,7 +4,6 @@ import requests
 import requests
 import concurrent.futures
 
-API_KEY = ''
 
 prompt = f"""
 You are a skilled accountant. 
