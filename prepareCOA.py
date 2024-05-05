@@ -166,7 +166,7 @@ def process_trial_balance(file):
     trial_balance_data = pd.read_excel(file)
     trial_balance_cleaned = trial_balance_data.iloc[4:].dropna(axis=1, how='all')
     trial_balance_cleaned.columns = ['Account', 'Debit', 'Credit']
-    trial_balance_cleaned[['Account Code', 'Account Name']] = trial_balance_cleaned['Account'].str.extract(r'(\d+(?:\.\d+)*)\s+(.*)') 
+    trial_balance_cleaned[['Account Code', 'Account Name']] = trial_balance_cleaned['Account'].str.extract(r'(?:(\d+(?:\.\d+)*)\s+)?(.*)')
     trial_balance_cleaned = trial_balance_cleaned.drop(columns=['Account'])
     trial_balance_cleaned = trial_balance_cleaned.dropna(subset=['Account Code', 'Account Name'])
     trial_balance_cleaned = trial_balance_cleaned[:-1]
