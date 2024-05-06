@@ -58,11 +58,10 @@ Below is the list of available SG Chart of Accounts:
 """ + "\n- " + "\n- ".join(sga_chart_of_accounts) + "\n"
 
 sga_prompt += """
-
 1) If there is no close match, name it 'No Suitable Match'.
 2) If there are 15 bank accounts given in a batch, you must return exactly 15 mapped account types (meaning 15 values returned, even if all 15 are no suitable match), Including No Suitable Match. This is so that the format will not get messed up. 
 3) Please do not give them index numbers at all.
-4) Make sure the return list length is exactly the same as the input size length
+4) Make sure the return list length is exactly the same as the input size length (VERY IMPORTANT PLEASE MAKE SURE FOR EVERY BATCH)
 5) Please do not have empty lines in your return. The results should all be in the next line IMPORTANT
 """
 
